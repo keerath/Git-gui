@@ -1,0 +1,28 @@
+added package json
+Fixes issue #7 we can now use grunt for first time users of grunt, we use version 0.4.0 meaning we need grunt-cli, steps npm install grunt npm install grunt-cli
+added gitignore to ignore dat and log file extensions
+updated readme for ml-demo with the new way of running it
+added doc for qcube
+localized lib files and changed routes for cubeserver
+moved ml-demo to new versions using common resources
+migrated ml-demo to use commons module
+added git-demo for qcube out of git log
+ui for node version
+added app.js which can run on node with 100k records
+added file list and desc
+moved ui pieces to demo.ui and added specs for pivot
+added recompute and o/p format
+added local jquery and underscore
+working ml demo
+working qctree based on all users, movies and 1k ratings
+added avg function as utility method
+Min and max for each measure
+Cube table optional
+Use table abstraction fully
+Git ignore
+Making all specs work after adding libs
+Sketchy readme
+Relevant papers
+Removing unnecessary files
+Quotient cube with specs
+First commit

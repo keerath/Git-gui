@@ -1,0 +1,54 @@
+<html>
+<body>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+</script>
+<button>Click Me</button>
+<div class= "content">
+</div>
+<script>
+$(document).ready(function(){
+	$("button").click(function(){
+		$.getJSON("/get_data",function(data){
+			var temp=0;
+			$.each(data,function(key,value){
+if(temp>0){
+$(".content").append("<br>");
+$(".content").append("<img src= http://www.dsource.in/course/design-of-signage/symbols/railway/image/800/arrow-down.jpg width='100' height='100'>");}
+	temp++;			$(".content").append("<table border='0' width='300' height='200' cellpadding='10'><tr><th>commit</th><td><small>"+value.id+"</small></td></tr><tr><th>Author</th><td><small>"+value.author+"</small></td></tr><tr><th>Date</th><td><small>"+value.date+"</small></td></tr><tr><td colspan='2'><b>"+value.msg+"</b></td></tr>");	
+
+
+		
+			});
+
+		});
+	});
+});
+</script>
+<style>
+div
+{
+position:relative;
+right:-400px;
+}
+img
+{
+position:relative;
+right:-100px;
+}
+table
+{
+border-collapse:collapse;
+background-color:#009999;
+float:c;
+border-radius:25px;
+box-shadow: 10px 10px 5px #888888;
+position:relative;
+left:-20px;
+}
+
+
+</style>
+</head>
+</body>
+</html>

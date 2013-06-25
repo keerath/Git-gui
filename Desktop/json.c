@@ -125,7 +125,10 @@ if(server==NULL)
 perror("Cant create");
 httpdSetAccessLog(server,stdout);
 httpdSetErrorLog(server,stderr);
-httpdSetFileBase(server,"/home/keerat/Desktop/");
+httpdSetFileBase(server,"/home/keerat/Desktop");
+httpdAddWildcardContent(server,"/css",NULL,"css");
+httpdAddWildcardContent(server,"/js",NULL,"js");
+httpdAddWildcardContent(server,"/pic",NULL,".");
 httpdAddFileContent(server,"/","index.html",HTTP_TRUE,NULL,"index.html");
 httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);
 

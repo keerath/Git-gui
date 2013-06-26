@@ -3,36 +3,38 @@
 #include<jansson.h>
 #include "httpd.h"
 #include<string.h>
+#include<time.h>
+int c=0;
 httpVar *var1,*var2;
 FILE *idf, *datef,*msgf,*authorf;
 json_t *array;
 char *str;
-char clone[10]="git clone ";
-char fid[50]="git --git-dir ~/";
-char fauth[50]="git --git-dir ~/";
-char fdate[50]="git --git-dir ~/";
-char fmsg[50]="git --git-dir ~/";
-char lid[100]=" log --pretty=format:'%h' >~/Desktop/id.txt";
-char lauth[100]=" log|grep -w ^Author: >~/Desktop/author.txt";
-char ldate[100]=" log|grep -w ^Date:   >~/Desktop/date.txt";
-char lmsg[100]=" log --pretty=format:%s >~/Desktop/msg.txt";
+char clone[200]="git clone ";
+char fid[200]="git --git-dir ~/Desktop/";
+char fauth[200]="git --git-dir ~/Desktop/";
+char fdate[200]="git --git-dir ~/Desktop/";
+char fmsg[200]="git --git-dir ~/Desktop/";
+char lid[100]="/.git log --pretty=format:'%h' >~/Desktop/id.txt";
+char lauth[100]="/.git log|grep -w ^Author: >~/Desktop/author.txt";
+char ldate[100]="/.git log|grep -w ^Date:   >~/Desktop/date.txt";
+char lmsg[100]="/.git log --pretty=format:%s >~/Desktop/msg.txt";
 void get()
 {
-strcat(clone,var2->value);
-system("cd ~");
-system(clone);
-strcat(fid,var1->value);
-strcat(fid,lid);
-system(fid);
-strcat(fauth,var1->value);
-strcat(fauth,lauth);
-system(fauth);
-strcat(fdate,var1->value);
-strcat(fdate,ldate);
-system(fdate);
-strcat(fmsg,var1->value);
-strcat(fmsg,lmsg);
-system(fmsg);
+	strcat(clone,var2->value);
+	system(clone);
+	strcat(fid,var1->value);
+	strcat(fid,lid);
+	printf("%s",fid);
+	system(fid);
+	strcat(fauth,var1->value);
+	strcat(fauth,lauth);
+	system(fauth);
+	strcat(fdate,var1->value);
+	strcat(fdate,ldate);
+	system(fdate);
+	strcat(fmsg,var1->value);
+	strcat(fmsg,lmsg);
+	system(fmsg);
 
 }
 
@@ -69,86 +71,86 @@ void create()
 		n++;
 	}
 }
-	void display()
-	{
-json_t *array = json_array();
-		struct node *new_node;
-		new_node=start;
-		
-		while(new_node!=NULL)
-		{ 
-json_t *obj=json_object();
-char id[10]="id";
-char author[10]="author";
-char msg[10]="msg";
-char date[10]="date";
-
-json_object_set(obj,id,json_string(new_node->id));
-json_object_set(obj,author,json_string(new_node->author));
-json_object_set(obj,date,json_string(new_node->date));
-json_object_set(obj,msg,json_string(new_node->msg));
-json_array_append(array,obj);
-				
-			
-			
-			new_node=new_node->next;
-		}
-
-		printf("NULL");
-		str=json_dumps(array,JSON_INDENT(4));
-
-void get_data(server)
-httpd *server;
+void convert_json()
 {
-if(strcmp(httpdRequestMethodName(server),"GET")==0)
+	json_t *array = json_array();
+	struct node *new_node;
+	new_node=start;
 
-httpdPrintf(server,"%s",str);
+	while(new_node!=NULL)
+	{ 
+		json_t *obj=json_object();
+		char id[10]="id";
+		char author[10]="author";
+		char msg[10]="msg";
+		char date[10]="date";
+
+		json_object_set(obj,id,json_string(new_node->id));
+		json_object_set(obj,author,json_string(new_node->author));
+		json_object_set(obj,date,json_string(new_node->date));
+		json_object_set(obj,msg,json_string(new_node->msg));
+		json_array_append(array,obj);
+
+
+
+		new_node=new_node->next;
+	}
+
+	printf("NULL");
+	str=json_dumps(array,JSON_INDENT(4));
+
+}
+void get_data(server)
+	httpd *server;
+{
+	if(strcmp(httpdRequestMethodName(server),"GET")==0)
+
+		httpdPrintf(server,"%s",str);
 }
 
 int main()
-{
-		
-		get();
-	idf=fopen("/home/keerat/Desktop/id.txt","r");
-	datef=fopen("/home/keerat/Desktop/date.txt","r");
-	msgf=fopen("/home/keerat/Desktop/msg.txt","r");
-	authorf=fopen("/home/keerat/Desktop/author.txt","r");
-		create();
-		display();
-	
-httpd *server;
-server=httpdCreate(NULL,9080);
-if(server==NULL)
-perror("Cant create");
-httpdSetAccessLog(server,stdout);
-httpdSetErrorLog(server,stderr);
-httpdSetFileBase(server,"/home/keerat/Desktop");
-httpdAddWildcardContent(server,"/css",NULL,"css");
-httpdAddWildcardContent(server,"/js",NULL,"js");
-httpdAddWildcardContent(server,"/pic",NULL,".");
-httpdAddFileContent(server,"/","index.html",HTTP_TRUE,NULL,"index.html");
-variable=httpdGetVariableByName(server,"user");
-if(variable!=NULL)
-printf("%s",variable->value);
-httpdGetVariableByName(server,"user");
-httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);
+{				
+	httpd *server;
+	server=httpdCreate(NULL,9080);
+	if(server==NULL)
+		perror("Cant create");
+	httpdSetAccessLog(server,stdout);
+	httpdSetErrorLog(server,stderr);
+	httpdSetFileBase(server,"/home/keerat/Desktop");
+	httpdAddWildcardContent(server,"/css",NULL,"css");
+	httpdAddWildcardContent(server,"/js",NULL,"js");
+	httpdAddWildcardContent(server,"/pic",NULL,".");
+	httpdAddFileContent(server,"/","index.html",HTTP_TRUE,NULL,"index.html");
+	httpdAddFileContent(server,"/","data.html",HTTP_FALSE,NULL,"data.html");	
+	while(1==1)
+	{
+		if(httpdGetConnection(server,NULL)<0)
+			continue;
+		if(httpdReadRequest(server)<0)
+		{
+			httpdEndRequest(server);
+			continue;
+		}
+		httpdProcessRequest(server);
 
-while(1==1)
-{
-if(httpdGetConnection(server,NULL)<0)
-continue;
-if(httpdReadRequest(server)<0)
-{
-httpdEndRequest(server);
-continue;
+		if(c==1)
+		{		
+			var1=httpdGetVariableByName(server,"name");
+			var2=httpdGetVariableByName(server,"url");
+			get();
+			sleep(10);
+			idf=fopen("/home/keerat/Desktop/id.txt","r");
+			datef=fopen("/home/keerat/Desktop/date.txt","r");
+			msgf=fopen("/home/keerat/Desktop/msg.txt","r");
+			authorf=fopen("/home/keerat/Desktop/author.txt","r");
+			create();
+			convert_json();
+			httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);
+			
+		}
+		c++;
+		httpdEndRequest(server);
+
+	}	
 }
-var1=httpdGetVariableByName(server,"name");
-var2=httpdGetVariableByName(server,"url");
-httpdProcessRequest(server);
-httpdEndRequest(server);
-}
-}
-
-
-
 

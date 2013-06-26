@@ -2,12 +2,16 @@
 <head>
 <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
 </head>
-<body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
 </script>
+<form class="well" action="/" method="get">
+<label>Enter Repo Name</label>
+<input type="text" name="name" class="span4" />
+<label>Enter URL of Repo from GITHUB</label>
+<input type="text" name="url" class="span5" /><br>
+<input type="submit" value="Submit">
 <div class="content">
 </div>
-<button class ="btn btn-primary">Click Me</button>
 <script>
 $(document).ready(function(){
 	$("button").click(function(){

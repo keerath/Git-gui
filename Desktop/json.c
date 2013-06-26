@@ -3,23 +3,39 @@
 #include<jansson.h>
 #include "httpd.h"
 #include<string.h>
-
+httpVar *var1,*var2;
 FILE *idf, *datef,*msgf,*authorf;
 json_t *array;
 char *str;
-
+char clone[10]="git clone ";
+char fid[50]="git --git-dir ~/";
+char fauth[50]="git --git-dir ~/";
+char fdate[50]="git --git-dir ~/";
+char fmsg[50]="git --git-dir ~/";
+char lid[100]=" log --pretty=format:'%h' >~/Desktop/id.txt";
+char lauth[100]=" log|grep -w ^Author: >~/Desktop/author.txt";
+char ldate[100]=" log|grep -w ^Date:   >~/Desktop/date.txt";
+char lmsg[100]=" log --pretty=format:%s >~/Desktop/msg.txt";
 void get()
 {
-system("git --git-dir ~/QCube/.git log --pretty=format:'%h' >~/Desktop/id.txt");
-system("git --git-dir ~/QCube/.git log|grep -w ^Author: >~/Desktop/author.txt");
-system("sed -i 's/Author: //g' ~/Desktop/author.txt");
-system("sed -i 's/</(/g' ~/Desktop/author.txt");
-system("sed -i 's/>/)/g' ~/Desktop/author.txt");
-system("git --git-dir ~/QCube/.git log|grep -w ^Date:   >~/Desktop/date.txt");
-system("sed -i 's/Date:   //g' ~/Desktop/date.txt");
-system("git --git-dir ~/QCube/.git log --pretty=format:%s >~/Desktop/msg.txt");
-system("grep -w ^:: msg.txt>msg2.txt");
+strcat(clone,var2->value);
+system("cd ~");
+system(clone);
+strcat(fid,var1->value);
+strcat(fid,lid);
+system(fid);
+strcat(fauth,var1->value);
+strcat(fauth,lauth);
+system(fauth);
+strcat(fdate,var1->value);
+strcat(fdate,ldate);
+system(fdate);
+strcat(fmsg,var1->value);
+strcat(fmsg,lmsg);
+system(fmsg);
+
 }
+
 struct node
 {
 	char id[30];
@@ -28,13 +44,6 @@ struct node
 	char date[50];
 	struct node *next;
 }*start=NULL;
-
-/*void get_msg(char *t,int c,FILE *temp)
-{
-fgets(t,c,temp);
-while((strstr(t,"---")!=NULL))
-{
-fgets(t,c,temp */
 
 void create()
 {int n=1;
@@ -87,19 +96,7 @@ json_array_append(array,obj);
 
 		printf("NULL");
 		str=json_dumps(array,JSON_INDENT(4));
-		//json_dump_file(array,"/home/keerat/Desktop/jsn.jason",JSON_INDENT(4));
-		//printf("%s",str);
-		
-	}
-	/*void main()
-	{
-		idf=fopen("/home/keerat/Desktop/id.txt","r");
-		datef=fopen("/home/keerat/Desktop/date.txt","r");
-		msgf=fopen("/home/keerat/Desktop/msg.txt","r");
-		authorf=fopen("/home/keerat/Desktop/author.txt","r");
-		create();
-		display();
-	}*/
+
 void get_data(server)
 httpd *server;
 {
@@ -112,13 +109,13 @@ int main()
 {
 		
 		get();
-		idf=fopen("/home/keerat/Desktop/id.txt","r");
-		datef=fopen("/home/keerat/Desktop/date.txt","r");
-		msgf=fopen("/home/keerat/Desktop/msg.txt","r");
-		authorf=fopen("/home/keerat/Desktop/author.txt","r");
+	idf=fopen("/home/keerat/Desktop/id.txt","r");
+	datef=fopen("/home/keerat/Desktop/date.txt","r");
+	msgf=fopen("/home/keerat/Desktop/msg.txt","r");
+	authorf=fopen("/home/keerat/Desktop/author.txt","r");
 		create();
 		display();
-	//printf("%s",(httpdUrlEncode(str)));
+	
 httpd *server;
 server=httpdCreate(NULL,9080);
 if(server==NULL)
@@ -130,6 +127,10 @@ httpdAddWildcardContent(server,"/css",NULL,"css");
 httpdAddWildcardContent(server,"/js",NULL,"js");
 httpdAddWildcardContent(server,"/pic",NULL,".");
 httpdAddFileContent(server,"/","index.html",HTTP_TRUE,NULL,"index.html");
+variable=httpdGetVariableByName(server,"user");
+if(variable!=NULL)
+printf("%s",variable->value);
+httpdGetVariableByName(server,"user");
 httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);
 
 while(1==1)
@@ -141,6 +142,8 @@ if(httpdReadRequest(server)<0)
 httpdEndRequest(server);
 continue;
 }
+var1=httpdGetVariableByName(server,"name");
+var2=httpdGetVariableByName(server,"url");
 httpdProcessRequest(server);
 httpdEndRequest(server);
 }

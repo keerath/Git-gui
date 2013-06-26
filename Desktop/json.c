@@ -132,11 +132,11 @@ int main()
 			continue;
 		}
 		httpdProcessRequest(server);
-
-		if(c==1)
+		var1=httpdGetVariableByName(server,"name");
+		var2=httpdGetVariableByName(server,"url");
+		if(var1!=NULL&&var2!=NULL)
 		{		
-			var1=httpdGetVariableByName(server,"name");
-			var2=httpdGetVariableByName(server,"url");
+			
 			get();
 			sleep(10);
 			idf=fopen("/home/keerat/Desktop/id.txt","r");

@@ -101,6 +101,10 @@ void convert_json()
 	{ 
 		json_t *obj=json_object();
 		
+		char id[10]="id";
+		char author[10]="author";
+		char msg[10]="msg";
+		char date[10]="date";
 
 		json_object_set(obj,id,json_string(new_node->id));
 		json_object_set(obj,author,json_string(new_node->author));

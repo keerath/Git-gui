@@ -7,8 +7,21 @@
 int c=0;
 httpVar *var1,*var2;
 FILE *idf, *datef,*msgf,*authorf;
-json_t *array;
 char *str;
+int nlines()
+{int c;
+int n=0;
+while((c=fgetc(idf))!=EOF)
+{
+if(c=='\n')
+n++;
+}
+fclose(idf);
+idf=fopen("/home/keerat/Desktop/id.txt","r");
+return n;
+}
+void get()
+{
 char clone[200]="git clone ";
 char fid[200]="git --git-dir ~/Desktop/";
 char fauth[200]="git --git-dir ~/Desktop/";
@@ -18,8 +31,6 @@ char lid[100]="/.git log --pretty=format:'%h' >~/Desktop/id.txt";
 char lauth[100]="/.git log|grep -w ^Author: >~/Desktop/author.txt";
 char ldate[100]="/.git log|grep -w ^Date:   >~/Desktop/date.txt";
 char lmsg[100]="/.git log --pretty=format:%s >~/Desktop/msg.txt";
-void get()
-{
 	strcat(clone,var2->value);
 	system(clone);
 	strcat(fid,var1->value);
@@ -48,9 +59,10 @@ struct node
 }*start=NULL;
 
 void create()
-{int n=1;
-	while(n<=20)
-	{
+{	
+	int n=1;
+	while(n<=(nlines()))
+	{	
 		struct node *new_node,*current;
 		new_node=(struct node *)malloc(sizeof(struct node));
 		fgets(new_node->id,30,idf);
@@ -71,8 +83,12 @@ void create()
 		n++;
 	}
 }
-void convert_json()
+void clear()
 {
+start=NULL;
+}
+void convert_json()
+{	str=NULL;
 	json_t *array = json_array();
 	struct node *new_node;
 	new_node=start;
@@ -80,10 +96,7 @@ void convert_json()
 	while(new_node!=NULL)
 	{ 
 		json_t *obj=json_object();
-		char id[10]="id";
-		char author[10]="author";
-		char msg[10]="msg";
-		char date[10]="date";
+		
 
 		json_object_set(obj,id,json_string(new_node->id));
 		json_object_set(obj,author,json_string(new_node->author));
@@ -98,7 +111,7 @@ void convert_json()
 
 	printf("NULL");
 	str=json_dumps(array,JSON_INDENT(4));
-
+	printf("%s",str);
 }
 void get_data(server)
 	httpd *server;
@@ -134,15 +147,17 @@ int main()
 		httpdProcessRequest(server);
 		var1=httpdGetVariableByName(server,"name");
 		var2=httpdGetVariableByName(server,"url");
+		
 		if(var1!=NULL&&var2!=NULL)
 		{		
-			
+			printf("%s%s",var1->value,var2->value);
 			get();
 			sleep(10);
 			idf=fopen("/home/keerat/Desktop/id.txt","r");
 			datef=fopen("/home/keerat/Desktop/date.txt","r");
 			msgf=fopen("/home/keerat/Desktop/msg.txt","r");
 			authorf=fopen("/home/keerat/Desktop/author.txt","r");
+			clear();
 			create();
 			convert_json();
 			httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);

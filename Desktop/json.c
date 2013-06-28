@@ -4,7 +4,6 @@
 #include "httpd.h"
 #include<string.h>
 #include<time.h>
-int c=0;
 httpVar *var1,*var2;
 FILE *idf, *datef,*msgf,*authorf;
 char *str;
@@ -92,7 +91,8 @@ void clear()
 start=NULL;
 }
 void convert_json()
-{	str=NULL;
+{	
+	str=NULL;
 	json_t *array = json_array();
 	struct node *new_node;
 	new_node=start;
@@ -116,8 +116,7 @@ void convert_json()
 
 		new_node=new_node->next;
 	}
-
-	printf("NULL");
+	json_dump_file(array,"/home/keerat/Desktop/output",JSON_INDENT(4));
 	str=json_dumps(array,JSON_INDENT(4));
 	printf("%s",str);
 }
@@ -160,7 +159,7 @@ int main()
 		{		
 			printf("%s%s",var1->value,var2->value);
 			get();
-			sleep(10);
+			sleep(7);
 			idf=fopen("/home/keerat/Desktop/id.txt","r");
 			datef=fopen("/home/keerat/Desktop/date.txt","r");
 			msgf=fopen("/home/keerat/Desktop/msg.txt","r");
@@ -169,11 +168,8 @@ int main()
 			create();
 			convert_json();
 			httpdAddCContent(server,"/","get_data",HTTP_FALSE,NULL,get_data);
-			
 		}
-		c++;
+		
 		httpdEndRequest(server);
-
 	}	
 }
-

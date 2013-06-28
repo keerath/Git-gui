@@ -7,9 +7,9 @@
 </head>
 <form class="well" id="id" method="POST">
 <label>Enter Name of Repository</label>
-<input type="text" name="name" class="span4" />
+<input type="text" name="name" class="span3" id="i1" />
 <label>Enter URL of Repository from GITHUB</label>
-<input type="text" name="url" class="span5" /><br>
+<input type="text" name="url" class="span5"  id="i2"/><br>
 <button class="btn btn-primary" id="button">Submit</button>
 </form>
 <div class="content">
@@ -24,9 +24,10 @@ $(document).ready(function(){
 			data:data,
 			
 			});	
-		event.preventDefault();		
+		event.preventDefault();	
 		$.getJSON("/get_data",function(data){
 			var temp=0;
+			$("div").empty();
 			$.each(data,function(index,value){
 if(temp>0){
 $(".content").append("<br>");
@@ -54,6 +55,10 @@ elem.find(".date").hide();
 
 </script>
 <style>
+#i1,#i2
+{
+	height:27px;
+}
 div
 {
 position:relative;
@@ -70,7 +75,7 @@ border-collapse:collapse;
 color:white;
 background-color:black;
 border-radius:25px;
-box-shadow: 10px 10px 10px blue;
+box-shadow: 10px 10px 13px blue;
 position:relative;
 left:-22px;
 }
